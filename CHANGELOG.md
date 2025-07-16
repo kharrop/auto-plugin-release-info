@@ -1,3 +1,15 @@
+# v0.5.1 (Wed Jul 16 2025)
+
+#### ⚠️ Pushed to `main`
+
+- reworking the logic to use afterRelease ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v0.4.1 (Wed Jul 16 2025)
 
 #### ⚠️ Pushed to `main`
