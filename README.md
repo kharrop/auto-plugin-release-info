@@ -1,4 +1,4 @@
-# auto-canary-comment
+# auto-comment-plugin
 
 [![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
 
@@ -7,11 +7,11 @@ Generate a PR comment when a new canary release is available, with a convenient 
 ## Installation
 
 ```sh
-npm i --save-dev auto-canary-comment
+npm i --save-dev auto-comment-plugin
 # or
-yarn add -D auto-canary-comment
+yarn add -D auto-comment-plugin
 # or
-pnpm add auto-canary-comment
+pnpm add auto-comment-plugin
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ Default:
 ```jsonc
 {
   "plugins": [
-    ["auto-canary-comment"]
+    ["auto-comment-plugin"]
     // other plugins
   ]
 }
@@ -33,7 +33,7 @@ With options:
 {
   "plugins": [
     [
-      "auto-canary-comment",
+      "auto-comment-plugin",
       {
         // Defaults to "Build Info"
         "context": "Canary Build",

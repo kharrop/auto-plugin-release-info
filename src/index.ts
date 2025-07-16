@@ -1,4 +1,10 @@
-import { Auto, IPlugin } from "@auto-it/core";
+import { Auto, IPlugin, SEMVER } from "@auto-it/core";
+
+// Simplified type with only the properties we need
+type CanaryHookInput = {
+  bump: SEMVER;
+  canaryIdentifier: string;
+};
 
 /**
  * Auto plugin that posts a PR comment with version information when a canary build is released
@@ -43,16 +49,9 @@ export default class CanaryCommentPlugin implements IPlugin {
 
   /** Apply the plugin to the Auto instance */
   apply(auto: Auto) {
-    auto.hooks.canary.tap(this.name, (input: any) => {
-      // When using --quiet, Auto passes the version as a string
-      const version = typeof input === "string" ? input : null;
-
-      if (!version) {
-        auto.logger.verbose.info(
-          "No canary version produced, skipping comment",
-        );
-        return;
-      }
+    auto.hooks.canary.tap(this.name, (canaryInput: CanaryHookInput) => {
+      // Construct the version string from the canary input
+      const version = `${canaryInput.bump}-canary.${canaryInput.canaryIdentifier}`;
 
       const prNumber = process.env.PR_NUMBER;
 

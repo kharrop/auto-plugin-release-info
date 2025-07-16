@@ -1,7 +1,7 @@
 {
-  "name": "auto-canary-comment-plugin",
+  "name": "auto-comment-plugin",
   "version": "1.0.0",
-  "description": "Auto plugin that comments on PRs with canary version",
+  "description": "Auto plugin that extends version posting functionality",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -24,9 +24,10 @@
   "author": "Kelly Harrop",
   "license": "MIT",
   "dependencies": {
-    "@auto-it/core": "^10.0.0"
+    "@auto-it/core": "^11.3.0"
   },
   "devDependencies": {
+    "auto": "^11.3.0",
     "@types/node": "^16.0.0",
     "eslint": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
