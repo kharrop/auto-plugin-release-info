@@ -1,6 +1,6 @@
 {
   "name": "auto-comment-plugin",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Auto plugin that extends version posting functionality",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -48,6 +48,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kharrop/auto-canary-comment"
+    "url": "https://github.com/kharrop/auto-comment-plugin"
   }
 }
