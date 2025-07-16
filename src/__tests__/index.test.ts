@@ -1,34 +1,36 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import CanaryCommentPlugin from "../index";
 import Auto from "@auto-it/core";
 
 describe("CanaryCommentPlugin", () => {
   let auto: Auto;
   let plugin: CanaryCommentPlugin;
-  let tapCallback: (version?: string) => Promise<void>;
+  // Store original environment variables
+  const originalEnv = { ...process.env };
 
   beforeEach(() => {
-    // Create a new Auto instance with mocked methods
-    auto = {
-      logger: {
-        verbose: {
-          info: vi.fn(),
-        },
-        log: vi.fn(),
+    auto = new Auto({} as any);
+    auto.hooks = {
+      canary: {
+        tap: vi.fn(),
       },
-      hooks: {
-        canary: {
-          tap: vi.fn((name, callback) => {
-            // Store the callback for testing
-            tapCallback = callback;
-          }),
-        },
+    } as any;
+    auto.logger = {
+      verbose: {
+        info: vi.fn(),
       },
-      comment: vi.fn().mockResolvedValue(undefined),
-    } as unknown as Auto;
+      log: vi.fn(),
+    } as any;
+    auto.comment = vi.fn().mockResolvedValue(undefined);
 
     plugin = new CanaryCommentPlugin();
     plugin.apply(auto);
+  });
+
+  afterEach(() => {
+    // Restore environment variables after each test
+    process.env = { ...originalEnv };
+    vi.resetAllMocks();
   });
 
   it("should tap into the canary hook", () => {
@@ -39,11 +41,11 @@ describe("CanaryCommentPlugin", () => {
   });
 
   it("should post a comment with version information when a canary build is released", async () => {
-    // Store the original env var
-    const originalPrNumber = process.env.PR_NUMBER;
-
     // Set up test environment
     process.env.PR_NUMBER = "123";
+
+    // Get the callback that was registered with the canary hook
+    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
 
     // Call the callback with a version
     await tapCallback("1.0.0-canary.abc123");
@@ -54,12 +56,12 @@ describe("CanaryCommentPlugin", () => {
       pr: 123,
       context: "Build Info",
     });
-
-    // Restore the original env var
-    process.env.PR_NUMBER = originalPrNumber;
   });
 
   it("should not post a comment when no version is provided", async () => {
+    // Get the callback that was registered with the canary hook
+    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
+
     // Call the callback with no version
     await tapCallback(undefined);
 
@@ -71,11 +73,11 @@ describe("CanaryCommentPlugin", () => {
   });
 
   it("should not post a comment when PR_NUMBER is not set", async () => {
-    // Store the original env var
-    const originalPrNumber = process.env.PR_NUMBER;
-
-    // Remove PR_NUMBER from environment
+    // Explicitly delete PR_NUMBER from environment
     delete process.env.PR_NUMBER;
+
+    // Get the callback that was registered with the canary hook
+    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
 
     // Call the callback with a version
     await tapCallback("1.0.0-canary.abc123");
@@ -85,28 +87,55 @@ describe("CanaryCommentPlugin", () => {
     expect(auto.logger.verbose.info).toHaveBeenCalledWith(
       "No PR_NUMBER environment variable found, skipping comment",
     );
-
-    // Restore the original env var
-    process.env.PR_NUMBER = originalPrNumber;
   });
 
   it("should handle errors when posting comments", async () => {
-    // Store the original env var
-    const originalPrNumber = process.env.PR_NUMBER;
+    // Set up test environment
+    process.env.PR_NUMBER = "123";
+
+    // Create an error to be thrown
+    const testError = new Error("Comment failed");
+
+    // Mock the comment method to reject with an error
+    auto.comment = vi.fn().mockRejectedValue(testError);
+
+    // Get the callback that was registered with the canary hook
+    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
+
+    // Call the callback with a version and use flushPromises to ensure all promises are resolved
+    await tapCallback("1.0.0-canary.abc123");
+
+    // Use vi.waitFor to wait for the asynchronous error handling to complete
+    await vi.waitFor(() => {
+      expect(auto.logger.log).toHaveBeenCalledWith("Failed to post comment");
+      expect(auto.logger.log).toHaveBeenCalledWith(testError);
+    });
+  });
+
+  it("should use custom context and note when provided", async () => {
+    // Create plugin with custom context and note
+    const customContext = "Release Info";
+    const customNote = "Please test this build thoroughly.";
+    const customPlugin = new CanaryCommentPlugin({
+      context: customContext,
+      note: customNote,
+    });
+    customPlugin.apply(auto);
 
     // Set up test environment
     process.env.PR_NUMBER = "123";
 
-    // Mock the comment method to throw an error
-    auto.comment = vi.fn().mockRejectedValue(new Error("Comment failed"));
+    // Get the callback that was registered with the canary hook
+    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[1][1];
 
     // Call the callback with a version
     await tapCallback("1.0.0-canary.abc123");
 
-    // Verify error was logged
-    expect(auto.logger.log).toHaveBeenCalledWith("Failed to post comment");
-
-    // Restore the original env var
-    process.env.PR_NUMBER = originalPrNumber;
+    // Verify the comment was posted with both custom context and note
+    expect(auto.comment).toHaveBeenCalledWith({
+      message: expect.stringContaining(customNote),
+      pr: 123,
+      context: customContext,
+    });
   });
 });

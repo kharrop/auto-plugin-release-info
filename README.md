@@ -16,10 +16,30 @@ pnpm add auto-canary-comment
 
 ## Usage
 
+Default:
+
 ```jsonc
 {
   "plugins": [
     ["auto-canary-comment"]
+    // other plugins
+  ]
+}
+```
+
+With options:
+
+```jsonc
+{
+  "plugins": [
+    [
+      "auto-canary-comment",
+      {
+        // Defaults to "Build Info"
+        "context": "Canary Build",
+        "note": "Please test this canary version before merging."
+      }
+    ]
     // other plugins
   ]
 }
