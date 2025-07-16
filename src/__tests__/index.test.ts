@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import CanaryCommentPlugin from "../index";
+import CanaryVersion from "../canary-version";
 import Auto from "@auto-it/core";
 
-describe("CanaryCommentPlugin", () => {
+describe("CanaryVersion", () => {
   let auto: Auto;
-  let plugin: CanaryCommentPlugin;
+  let plugin: CanaryVersion;
   // Store original environment variables
   const originalEnv = { ...process.env };
 
@@ -23,7 +23,7 @@ describe("CanaryCommentPlugin", () => {
     } as any;
     auto.comment = vi.fn().mockResolvedValue(undefined);
 
-    plugin = new CanaryCommentPlugin();
+    plugin = new CanaryVersion();
     plugin.apply(auto);
   });
 
@@ -116,7 +116,7 @@ describe("CanaryCommentPlugin", () => {
     // Create plugin with custom context and note
     const customContext = "Release Info";
     const customNote = "Please test this build thoroughly.";
-    const customPlugin = new CanaryCommentPlugin({
+    const customPlugin = new CanaryVersion({
       context: customContext,
       note: customNote,
     });
