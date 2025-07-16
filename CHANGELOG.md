@@ -1,3 +1,24 @@
+# v0.2.1 (Wed Jul 16 2025)
+
+#### ⚠️ Pushed to `main`
+
+- registry (Kelly_Harrop@intuit.com)
+- fixing test (Kelly_Harrop@intuit.com)
+- renaming things (Kelly_Harrop@intuit.com)
+- updating all the names (Kelly_Harrop@intuit.com)
+- updating URL (Kelly_Harrop@intuit.com)
+- fixing build (Kelly_Harrop@intuit.com)
+- adding configurations and docs (Kelly_Harrop@intuit.com)
+- initial setup (Kelly_Harrop@intuit.com)
+- Update README.md (Kelly_Harrop@intuit.com)
+- Initial commit (Kelly_Harrop@intuit.com)
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v0.1.1 (Wed Jul 16 2025)
 
 #### ⚠️ Pushed to `main`
