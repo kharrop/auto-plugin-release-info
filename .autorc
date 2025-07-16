@@ -1,0 +1,19 @@
+{
+  "plugins": [
+    [
+      "npm",
+      {
+        "setRcToken": false
+      }
+    ],
+    "released",
+    "pr-body-labels"
+  ],
+  "labels": [
+    {
+      "name": "dependency-update",
+      "changelogTitle": "🔩 Dependency Updates",
+      "releaseType": "none"
+    }
+  ]
+}

@@ -1,6 +1,8 @@
 # auto-canary-comment
 
-Generate a PR comment when a new canary release is available, with a convenient click to copy button. The comment is displayed in addition to the PR body update.
+[![Auto Release](https://img.shields.io/badge/release-auto.svg?colorA=888888&colorB=9B065A&label=auto)](https://github.com/intuit/auto)
+
+Generate a PR comment when a new canary release is available, with a convenient click to copy button. The comment is updated when new canary versions are published.
 
 ## Installation
 
@@ -17,9 +19,7 @@ pnpm add auto-canary-comment
 ```jsonc
 {
   "plugins": [
-    [
-      "auto-canary-comment"
-    ]
+    ["auto-canary-comment"]
     // other plugins
   ]
 }
