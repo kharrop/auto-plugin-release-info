@@ -50,6 +50,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kharrop/auto-comment-plugin"
+    "url": "https://github.com/kharrop/auto-comment-plugin.git"
   }
 }
