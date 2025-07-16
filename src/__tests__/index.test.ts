@@ -11,7 +11,7 @@ describe("CanaryVersion", () => {
   beforeEach(() => {
     auto = new Auto({} as any);
     auto.hooks = {
-      canary: {
+      afterRelease: {
         tap: vi.fn(),
       },
     } as any;
@@ -33,19 +33,16 @@ describe("CanaryVersion", () => {
     vi.resetAllMocks();
   });
 
-  it("should tap into the canary hook", () => {
-    expect(auto.hooks.canary.tap).toHaveBeenCalledWith(
+  it("should tap into the afterRelease hook", () => {
+    expect(auto.hooks.afterRelease.tap).toHaveBeenCalledWith(
       "auto-comment-plugin",
       expect.any(Function),
     );
   });
 
   it("should post a comment with version information when a canary build is released", async () => {
-    // Set up test environment
-    process.env.PR_NUMBER = "123";
-
-    // Get the callback that was registered with the canary hook
-    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
+    // Get the callback that was registered with the afterRelease hook
+    const tapCallback = (auto.hooks.afterRelease.tap as any).mock.calls[0][1];
 
     // Call the callback with a version
     await tapCallback("1.0.0-canary.abc123");
@@ -53,14 +50,13 @@ describe("CanaryVersion", () => {
     // Verify the comment was posted with the correct information
     expect(auto.comment).toHaveBeenCalledWith({
       message: expect.stringContaining("1.0.0-canary.abc123"),
-      pr: 123,
       context: "Build Info",
     });
   });
 
   it("should not post a comment when no version is provided", async () => {
-    // Get the callback that was registered with the canary hook
-    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
+    // Get the callback that was registered with the afterRelease hook
+    const tapCallback = (auto.hooks.afterRelease.tap as any).mock.calls[0][1];
 
     // Call the callback with no version
     await tapCallback(undefined);
@@ -68,39 +64,19 @@ describe("CanaryVersion", () => {
     // Verify no comment was posted
     expect(auto.comment).not.toHaveBeenCalled();
     expect(auto.logger.verbose.info).toHaveBeenCalledWith(
-      "No canary version produced, skipping comment",
-    );
-  });
-
-  it("should not post a comment when PR_NUMBER is not set", async () => {
-    // Explicitly delete PR_NUMBER from environment
-    delete process.env.PR_NUMBER;
-
-    // Get the callback that was registered with the canary hook
-    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
-
-    // Call the callback with a version
-    await tapCallback("1.0.0-canary.abc123");
-
-    // Verify no comment was posted
-    expect(auto.comment).not.toHaveBeenCalled();
-    expect(auto.logger.verbose.info).toHaveBeenCalledWith(
-      "No PR_NUMBER environment variable found, skipping comment",
+      "No release version produced, skipping comment",
     );
   });
 
   it("should handle errors when posting comments", async () => {
-    // Set up test environment
-    process.env.PR_NUMBER = "123";
-
     // Create an error to be thrown
     const testError = new Error("Comment failed");
 
     // Mock the comment method to reject with an error
     auto.comment = vi.fn().mockRejectedValue(testError);
 
-    // Get the callback that was registered with the canary hook
-    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[0][1];
+    // Get the callback that was registered with the afterRelease hook
+    const tapCallback = (auto.hooks.afterRelease.tap as any).mock.calls[0][1];
 
     // Call the callback with a version and use flushPromises to ensure all promises are resolved
     await tapCallback("1.0.0-canary.abc123");
@@ -122,11 +98,8 @@ describe("CanaryVersion", () => {
     });
     customPlugin.apply(auto);
 
-    // Set up test environment
-    process.env.PR_NUMBER = "123";
-
-    // Get the callback that was registered with the canary hook
-    const tapCallback = (auto.hooks.canary.tap as any).mock.calls[1][1];
+    // Get the callback that was registered with the afterRelease hook
+    const tapCallback = (auto.hooks.afterRelease.tap as any).mock.calls[1][1];
 
     // Call the callback with a version
     await tapCallback("1.0.0-canary.abc123");
@@ -134,7 +107,6 @@ describe("CanaryVersion", () => {
     // Verify the comment was posted with both custom context and note
     expect(auto.comment).toHaveBeenCalledWith({
       message: expect.stringContaining(customNote),
-      pr: 123,
       context: customContext,
     });
   });

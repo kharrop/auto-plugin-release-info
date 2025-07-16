@@ -1,7 +1,7 @@
-import { Auto, IPlugin, SEMVER } from "@auto-it/core";
+import { Auto, IPlugin } from "@auto-it/core";
 
 /**
- * Auto plugin that posts a PR comment with version information when a canary build is released
+ * Auto plugin that posts a PR comment with version information when a release is created
  */
 export default class CanaryVersion implements IPlugin {
   /** The name of the plugin */
@@ -20,97 +20,88 @@ export default class CanaryVersion implements IPlugin {
 
   /**
    * Format the build info message with version information
-   * @param version The canary version string
+   * @param version The version string
    * @returns Formatted markdown message
    */
-  private formatBuildInfoMessage(version: string): string {
+  private formatVersionMessage(version: string): string {
     const currentDate = new Date().toUTCString();
 
-    let buildInfo = "### Build Info\n\n";
-    buildInfo += `Your PR was successfully deployed on \`${currentDate}\` with this version:\n\n`;
-    buildInfo += "```\n";
-    buildInfo += `${version}\n`;
-    buildInfo += "```";
+    let versionMessage = `### ${this.context}\n\n`;
+    versionMessage += `Your PR was successfully deployed on \`${currentDate}\` with this version:\n\n`;
+    versionMessage += "```\n";
+    versionMessage += `${version}\n`;
+    versionMessage += "```";
 
     // Add the optional note if provided
     if (this.note) {
-      buildInfo += "\n\n";
-      buildInfo += this.note;
+      versionMessage += "\n\n";
+      versionMessage += this.note;
     }
 
-    return buildInfo;
+    return versionMessage;
+  }
+
+  /**
+   * Post a comment with version information
+   * @param auto The Auto instance
+   * @param version The version string
+   */
+  private async postVersionComment(auto: Auto, version: string): Promise<void> {
+    // Post the comment
+    auto.logger.verbose.info(`Posting comment with version ${version}`);
+
+    try {
+      // Auto will determine where to post the comment based on the current PR context
+      await auto.comment({
+        message: this.formatVersionMessage(version),
+        context: this.context,
+      });
+
+      auto.logger.log(`Successfully posted version comment`);
+    } catch (error) {
+      auto.logger.log("Failed to post comment");
+      auto.logger.log(error);
+      throw error; // Re-throw to be caught by the caller
+    }
   }
 
   /** Apply the plugin to the Auto instance */
   apply(auto: Auto) {
-    auto.hooks.canary.tap(this.name, (canaryInput) => {
-      // Handle undefined canaryInput
-      if (!canaryInput) {
-        auto.logger.verbose.info(
-          "No canary version produced, skipping comment",
-        );
-        return;
-      }
+    // Handle all releases through afterRelease hook
+    auto.hooks.afterRelease.tap(this.name, async (release) => {
+      try {
+        // Handle both string version and release object
+        let newVersion: string | undefined;
 
-      // Get the version from the return value of previous plugins
-      // or construct it from the canary input
-      let version: string;
+        if (typeof release === "string") {
+          newVersion = release;
+        } else if (release && release.newVersion) {
+          newVersion = release.newVersion;
+        }
 
-      // Type guard for objects with newVersion property
-      interface WithNewVersion {
-        newVersion: string;
-      }
-
-      // Check if canaryInput has newVersion property and it's a string
-      if (
-        typeof canaryInput === "object" &&
-        canaryInput !== null &&
-        "newVersion" in canaryInput &&
-        typeof (canaryInput as WithNewVersion).newVersion === "string"
-      ) {
-        version = (canaryInput as WithNewVersion).newVersion;
-      } else if (typeof canaryInput === "string") {
-        // Handle case where canaryInput is directly a string
-        version = canaryInput;
-      } else {
-        // Otherwise construct it from the bump and identifier
-        const { bump, canaryIdentifier } = canaryInput as {
-          bump: SEMVER;
-          canaryIdentifier: string;
-        };
-        version = `${bump}--canary.${canaryIdentifier}.0`;
-      }
-
-      const prNumber = process.env.PR_NUMBER;
-
-      if (!prNumber) {
-        auto.logger.verbose.info(
-          "No PR_NUMBER environment variable found, skipping comment",
-        );
-        return;
-      }
-
-      // Post the comment
-      auto.logger.verbose.info(
-        `Posting comment to PR #${prNumber} with version ${version}`,
-      );
-
-      auto
-        .comment({
-          message: this.formatBuildInfoMessage(version),
-          pr: Number(prNumber),
-          context: this.context,
-        })
-        .then(() => {
-          // Only log success if the comment was actually posted
-          auto.logger.log(
-            `Successfully posted version comment to PR #${prNumber}`,
+        if (!newVersion) {
+          auto.logger.verbose.info(
+            "No release version produced, skipping comment",
           );
-        })
-        .catch((error) => {
-          auto.logger.log("Failed to post comment");
-          auto.logger.log(error);
-        });
+          return;
+        }
+
+        // Check if this is a canary release by looking at the version string
+        const isCanary = newVersion.includes("canary");
+
+        auto.logger.log(
+          `Processing ${
+            isCanary ? "canary" : "regular"
+          } release: ${newVersion}`,
+        );
+
+        // Only post comments for canary releases
+        if (isCanary) {
+          await this.postVersionComment(auto, newVersion);
+        }
+      } catch (error) {
+        auto.logger.log("Failed to post comment");
+      }
     });
   }
 }
