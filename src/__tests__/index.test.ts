@@ -35,7 +35,7 @@ describe("CanaryCommentPlugin", () => {
 
   it("should tap into the canary hook", () => {
     expect(auto.hooks.canary.tap).toHaveBeenCalledWith(
-      "canary-comment-plugin",
+      "auto-comment-plugin",
       expect.any(Function),
     );
   });

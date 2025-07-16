@@ -11,7 +11,7 @@ type CanaryHookInput = {
  */
 export default class CanaryCommentPlugin implements IPlugin {
   /** The name of the plugin */
-  name = "canary-comment-plugin";
+  name = "auto-comment-plugin";
 
   /** Comment context */
   private context: string;

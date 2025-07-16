@@ -1,17 +1,49 @@
 {
   "plugins": [
-    [
-      "npm",
-      {
-        "setRcToken": false
-      }
-    ],
+    "npm",
     "released"
   ],
+  "repo": "kharrop/auto-comment-plugin",
   "labels": [
     {
-      "name": "dependency-update",
+      "name": "major",
+      "changelogTitle": "💥 Breaking Change",
+      "description": "Increment the major version when merged",
+      "releaseType": "major"
+    },
+    {
+      "name": "minor",
+      "changelogTitle": "🚀 Enhancement",
+      "description": "Increment the minor version when merged",
+      "releaseType": "minor"
+    },
+    {
+      "name": "patch",
+      "changelogTitle": "🐛 Bug Fix",
+      "description": "Increment the patch version when merged",
+      "releaseType": "patch"
+    },
+    {
+      "name": "skip-release",
+      "description": "Preserve the current version when merged",
+      "releaseType": "skip"
+    },
+    {
+      "name": "documentation",
+      "changelogTitle": "📝 Documentation",
+      "description": "Changes only affect documentation",
+      "releaseType": "none"
+    },
+    {
+      "name": "dependencies",
       "changelogTitle": "🔩 Dependency Updates",
+      "description": "Update one or more dependencies",
+      "releaseType": "patch"
+    },
+    {
+      "name": "internal",
+      "changelogTitle": "🏠 Internal",
+      "description": "Changes only affect the internal API",
       "releaseType": "none"
     }
   ]
