@@ -44,6 +44,14 @@ export default class CanaryVersion implements IPlugin {
   /** Apply the plugin to the Auto instance */
   apply(auto: Auto) {
     auto.hooks.canary.tap(this.name, (canaryInput) => {
+      // Handle undefined canaryInput
+      if (!canaryInput) {
+        auto.logger.verbose.info(
+          "No canary version produced, skipping comment",
+        );
+        return;
+      }
+
       // Get the version from the return value of previous plugins
       // or construct it from the canary input
       let version: string;
@@ -61,6 +69,9 @@ export default class CanaryVersion implements IPlugin {
         typeof (canaryInput as WithNewVersion).newVersion === "string"
       ) {
         version = (canaryInput as WithNewVersion).newVersion;
+      } else if (typeof canaryInput === "string") {
+        // Handle case where canaryInput is directly a string
+        version = canaryInput;
       } else {
         // Otherwise construct it from the bump and identifier
         const { bump, canaryIdentifier } = canaryInput as {
