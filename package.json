@@ -1,7 +1,7 @@
 {
-  "name": "auto-plugin-canary-version",
+  "name": "auto-plugin-release-info",
   "version": "0.6.1",
-  "description": "Auto plugin that extends version posting functionality",
+  "description": "Auto plugin that outputs info about the latest release",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
@@ -50,6 +50,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kharrop/auto-comment-plugin.git"
+    "url": "https://github.com/kharrop/auto-plugin-release-info.git"
   }
 }

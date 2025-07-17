@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import CanaryVersion from "../canary-version";
+import ReleaseInfo from "../";
 import Auto from "@auto-it/core";
 
-describe("CanaryVersion", () => {
+describe("ReleaseInfoCanaryComment", () => {
   let auto: Auto;
-  let plugin: CanaryVersion;
+  let plugin: ReleaseInfo;
   // Store original environment variables
   const originalEnv = { ...process.env };
 
@@ -23,7 +23,7 @@ describe("CanaryVersion", () => {
     } as any;
     auto.comment = vi.fn().mockResolvedValue(undefined);
 
-    plugin = new CanaryVersion();
+    plugin = new ReleaseInfo();
     plugin.apply(auto);
   });
 
@@ -35,7 +35,7 @@ describe("CanaryVersion", () => {
 
   it("should tap into the afterRelease hook", () => {
     expect(auto.hooks.afterRelease.tap).toHaveBeenCalledWith(
-      "auto-plugin-canary-version",
+      "auto-plugin-release-info",
       expect.any(Function),
     );
   });
@@ -92,7 +92,7 @@ describe("CanaryVersion", () => {
     // Create plugin with custom context and note
     const customContext = "Release Info";
     const customNote = "Please test this build thoroughly.";
-    const customPlugin = new CanaryVersion({
+    const customPlugin = new ReleaseInfo({
       context: customContext,
       note: customNote,
     });
