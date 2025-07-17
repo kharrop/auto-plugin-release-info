@@ -5,7 +5,7 @@ import { Auto, IPlugin } from "@auto-it/core";
  */
 export default class CanaryVersion implements IPlugin {
   /** The name of the plugin */
-  name = "auto-comment-plugin";
+  name = "auto-plugin-canary-version";
 
   /** Comment context */
   private context: string;

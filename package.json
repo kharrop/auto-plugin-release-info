@@ -1,5 +1,5 @@
 {
-  "name": "auto-comment-plugin",
+  "name": "auto-plugin-canary-version",
   "version": "0.5.1",
   "description": "Auto plugin that extends version posting functionality",
   "main": "dist/index.js",
