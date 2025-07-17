@@ -35,7 +35,7 @@ describe("CanaryVersion", () => {
 
   it("should tap into the afterRelease hook", () => {
     expect(auto.hooks.afterRelease.tap).toHaveBeenCalledWith(
-      "auto-comment-plugin",
+      "auto-plugin-canary-version",
       expect.any(Function),
     );
   });
