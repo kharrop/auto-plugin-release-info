@@ -5,7 +5,7 @@ import { Auto, IPlugin } from "@auto-it/core";
  */
 export default class ReleaseInfo implements IPlugin {
   /** The name of the plugin */
-  name = "auto-plugin-release-info";
+  name = "release-info";
 
   /** Comment context */
   private context: string;
