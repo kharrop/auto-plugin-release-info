@@ -2,6 +2,18 @@
 
 #### ⚠️ Pushed to `main`
 
+- changing package name ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v0.5.2 (Wed Jul 16 2025)
+
+#### ⚠️ Pushed to `main`
+
 - changing package name (Kelly_Harrop@intuit.com)
 
 #### Authors: 1
