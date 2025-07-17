@@ -1,3 +1,16 @@
+# v0.6.3 (Thu Jul 17 2025)
+
+#### ⚠️ Pushed to `main`
+
+- fixing name ([@kharrop](https://github.com/kharrop))
+- fixing test ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v0.5.2 (Wed Jul 16 2025)
 
 #### ⚠️ Pushed to `main`
