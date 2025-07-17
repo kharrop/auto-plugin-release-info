@@ -14,7 +14,7 @@ export default class ReleaseInfo implements IPlugin {
   private note?: string;
 
   constructor(options: { context?: string; note?: string } = {}) {
-    this.context = options.context || "Build Info";
+    this.context = options.context || "Release Info";
     this.note = options.note;
   }
 
