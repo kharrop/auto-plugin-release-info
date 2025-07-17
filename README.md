@@ -7,11 +7,11 @@ Generate a PR comment when a new canary release is available, with a convenient 
 ## Installation
 
 ```sh
-npm i --save-dev auto-comment-plugin
+npm i --save-dev auto-plugin-canary-version
 # or
-yarn add -D auto-comment-plugin
+yarn add -D auto-plugin-canary-version
 # or
-pnpm add auto-comment-plugin
+pnpm add auto-plugin-canary-version
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ Default:
 ```jsonc
 {
   "plugins": [
-    ["auto-comment-plugin"]
+    ["canary-version"]
     // other plugins
   ]
 }
@@ -33,7 +33,7 @@ With options:
 {
   "plugins": [
     [
-      "auto-comment-plugin",
+      "canary-version",
       {
         // Defaults to "Build Info"
         "context": "Canary Build",
