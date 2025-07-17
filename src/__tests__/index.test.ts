@@ -50,7 +50,7 @@ describe("ReleaseInfoCanaryComment", () => {
     // Verify the comment was posted with the correct information
     expect(auto.comment).toHaveBeenCalledWith({
       message: expect.stringContaining("1.0.0-canary.abc123"),
-      context: "Build Info",
+      context: "Release Info",
     });
   });
 
