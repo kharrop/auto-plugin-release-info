@@ -2,6 +2,19 @@
 
 #### ⚠️ Pushed to `main`
 
+- fixing test ([@kharrop](https://github.com/kharrop))
+- name ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v0.6.4 (Thu Jul 17 2025)
+
+#### ⚠️ Pushed to `main`
+
 - name (Kelly_Harrop@intuit.com)
 
 #### Authors: 1
