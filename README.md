@@ -33,7 +33,7 @@ With options:
 {
   "plugins": [
     [
-      "auto-plugin-release-info",
+      "release-info",
       {
         // Defaults to "Release Info"
         "context": "Canary Build",
