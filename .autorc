@@ -4,7 +4,7 @@
     "released"
   ],
   "owner": "kharrop",
-  "repo": "auto-plugin-version-info",
+  "repo": "auto-plugin-release-info",
   "labels": [
     {
       "name": "major",
