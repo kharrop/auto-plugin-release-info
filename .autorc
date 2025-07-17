@@ -3,7 +3,7 @@
     "npm",
     "released"
   ],
-  "repo": "kharrop/auto-comment-plugin",
+  "repo": "kharrop/auto-plugin-version-info",
   "labels": [
     {
       "name": "major",
