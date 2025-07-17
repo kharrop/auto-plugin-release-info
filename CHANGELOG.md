@@ -1,3 +1,15 @@
+# v0.5.2 (Wed Jul 16 2025)
+
+#### ⚠️ Pushed to `main`
+
+- changing package name (Kelly_Harrop@intuit.com)
+
+#### Authors: 1
+
+- Kelly Harrop (Kelly_Harrop@intuit.com)
+
+---
+
 # v0.5.1 (Wed Jul 16 2025)
 
 #### ⚠️ Pushed to `main`
