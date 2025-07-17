@@ -1,6 +1,6 @@
 {
   "name": "auto-plugin-canary-version",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Auto plugin that extends version posting functionality",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
