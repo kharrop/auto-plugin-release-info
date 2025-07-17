@@ -35,7 +35,7 @@ describe("ReleaseInfoCanaryComment", () => {
 
   it("should tap into the afterRelease hook", () => {
     expect(auto.hooks.afterRelease.tap).toHaveBeenCalledWith(
-      "auto-plugin-release-info",
+      "release-info",
       expect.any(Function),
     );
   });
