@@ -1,3 +1,17 @@
+# v0.6.6 (Fri Jul 18 2025)
+
+#### ⚠️ Pushed to `main`
+
+- Merge branch 'main' of https://github.com/kharrop/auto-comment-plugin ([@kharrop](https://github.com/kharrop))
+- updated to work with afterShipIt, created more release templates, updated notes API ([@kharrop](https://github.com/kharrop))
+- Update README.md ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v0.6.4 (Thu Jul 17 2025)
 
 #### ⚠️ Pushed to `main`
