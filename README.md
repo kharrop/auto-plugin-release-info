@@ -23,7 +23,6 @@ pnpm add auto-plugin-release-info
 - Customizable messages based on release type (major, minor, patch, canary)
 - Convenient copy-to-clipboard button for version information
 - Integrates seamlessly with the Auto release workflow
--
 
 ## Usage
 
