@@ -1,3 +1,15 @@
+# v0.6.8 (Mon Jul 21 2025)
+
+#### ⚠️ Pushed to `main`
+
+- cleaning up try/catch logic ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
 # v0.6.7 (Fri Jul 18 2025)
 
 #### ⚠️ Pushed to `main`
