@@ -79,39 +79,37 @@ export default class ReleaseInfo implements IPlugin {
   apply(auto: Auto) {
     // Handle all releases through afterShipIt hook
     auto.hooks.afterShipIt.tap(this.name, async (release) => {
-      try {
-        const { newVersion, context: releaseContext } = release;
+      const { newVersion, context: releaseContext } = release;
 
-        if (!newVersion) {
-          auto.logger.verbose.info(
-            "No release version produced, skipping comment",
-          );
-          return;
-        }
-
+      if (!newVersion) {
         auto.logger.verbose.info(
-          `Processing ${releaseContext} release with version ${newVersion}`,
+          "No release version produced, skipping comment",
         );
+        return;
+      }
 
-        // Get the appropriate message for this release context
-        const message = this.getVersionMessage(newVersion, releaseContext);
+      auto.logger.verbose.info(
+        `Processing ${releaseContext} release with version ${newVersion}`,
+      );
 
+      // Get the appropriate message for this release context
+      const message = this.getVersionMessage(newVersion, releaseContext);
+
+      try {
         // Try to post a comment - auto.comment() will handle whether we're in a PR context
-        try {
-          await auto.comment({
-            message,
-            context: this.context,
-          });
-          auto.logger.log(`Successfully posted version comment`);
-        } catch (error) {
-          // If comment posting fails, it's likely because we're not in a PR context
-          auto.logger.verbose.info(
-            "Could not post comment - likely not in a PR context",
-          );
-        }
+        await auto.comment({
+          message,
+          context: this.context,
+        });
+        auto.logger.log("Successfully posted version comment");
       } catch (error) {
-        auto.logger.log("Failed in afterShipIt hook");
-        auto.logger.log(error);
+        // If comment posting fails, it's likely because we're not in a PR context
+        auto.logger.verbose.info(
+          "Could not post comment - likely not in a PR context",
+        );
+        auto.logger.verbose.info(
+          error instanceof Error ? error.message : String(error),
+        );
       }
     });
   }
