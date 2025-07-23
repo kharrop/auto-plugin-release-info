@@ -2,6 +2,19 @@
 
 #### ⚠️ Pushed to `main`
 
+- fixing implementation for tests ([@kharrop](https://github.com/kharrop))
+- trying to fix logs ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v0.6.9 (Wed Jul 23 2025)
+
+#### ⚠️ Pushed to `main`
+
 - trying to fix logs ([@kharrop](https://github.com/kharrop))
 
 #### Authors: 1
