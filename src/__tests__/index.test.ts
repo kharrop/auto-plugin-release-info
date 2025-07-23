@@ -170,7 +170,7 @@ describe("ReleaseInfoCanaryComment", () => {
     );
 
     // Verify no other errors were logged that would indicate build failure
-    expect(auto.logger.log).not.toHaveBeenCalledWith(
+    expect(auto.logger.verbose.info).not.toHaveBeenCalledWith(
       expect.stringMatching(/^Failed/),
       expect.any(Error),
     );

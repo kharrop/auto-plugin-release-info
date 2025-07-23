@@ -109,7 +109,7 @@ export default class ReleaseInfo implements IPlugin {
           message,
           context: this.context,
         });
-        auto.logger.log("Successfully posted version comment");
+        auto.logger.verbose.info("Successfully posted version comment");
       } catch (error) {
         auto.logger.verbose.info(
           "Could not post comment - likely not in a PR context",
