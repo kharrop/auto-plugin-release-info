@@ -97,7 +97,6 @@ export default class ReleaseInfo implements IPlugin {
 
       try {
         // Check if we're in a PR context by checking if the comment function is available
-        // This is safer than checking specific git options which might change
         if (!auto.comment) {
           auto.logger.verbose.info(
             "Comment function not available, skipping comment posting",
@@ -105,19 +104,21 @@ export default class ReleaseInfo implements IPlugin {
           return;
         }
 
-        // Try to post the comment - this will fail gracefully if not in a PR context
+        // Post a comment since we're in a PR context
         await auto.comment({
           message,
           context: this.context,
         });
-        auto.logger.verbose.info("Successfully posted version comment");
+        auto.logger.log("Successfully posted version comment");
       } catch (error) {
         auto.logger.verbose.info(
-          "Error while posting comment - likely not in a PR context",
+          "Could not post comment - likely not in a PR context",
         );
-        auto.logger.verbose.info(
-          error instanceof Error ? error.message : String(error),
-        );
+        if (error instanceof Error) {
+          auto.logger.verbose.info(error.message);
+        } else {
+          auto.logger.verbose.info(String(error));
+        }
       }
     });
   }
