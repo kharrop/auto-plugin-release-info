@@ -52,6 +52,9 @@ describe("ReleaseInfoCanaryComment", () => {
       message: expect.stringContaining("1.0.0-canary.abc123"),
       context: "Release Info",
     });
+    expect(auto.logger.verbose.info).toHaveBeenCalledWith(
+      "Successfully posted version comment",
+    );
   });
 
   it("should not post a comment when no version is provided", async () => {
@@ -83,7 +86,45 @@ describe("ReleaseInfoCanaryComment", () => {
 
     // Verify the error was logged
     expect(auto.logger.verbose.info).toHaveBeenCalledWith(
-      "Could not post comment - likely not in a PR context",
+      "Error posting comment to PR:",
+    );
+    expect(auto.logger.verbose.info).toHaveBeenCalledWith("Comment failed");
+  });
+
+  it("should skip comment posting when not in a PR context", async () => {
+    // Create a new Auto instance with a comment property that's set to null
+    const autoWithoutComment = {
+      hooks: {
+        afterShipIt: {
+          tap: vi.fn(),
+        },
+      },
+      logger: {
+        verbose: {
+          info: vi.fn(),
+        },
+        log: vi.fn(),
+      },
+      // comment is intentionally not defined here
+    } as any;
+
+    // Apply the plugin to this new instance
+    const testPlugin = new ReleaseInfo();
+    testPlugin.apply(autoWithoutComment);
+
+    // Get the callback that was registered with the afterShipIt hook
+    const tapCallback = (autoWithoutComment.hooks.afterShipIt.tap as any).mock
+      .calls[0][1];
+
+    // Call the callback with a release object
+    await tapCallback({ newVersion: "1.0.0", context: "latest" });
+
+    // Verify the appropriate messages were logged in order
+    expect(autoWithoutComment.logger.verbose.info).toHaveBeenCalledWith(
+      "Processing latest release with version 1.0.0",
+    );
+    expect(autoWithoutComment.logger.verbose.info).toHaveBeenCalledWith(
+      "Auto shipit was triggered outside of a PR context, skipping comment",
     );
   });
 
@@ -166,8 +207,9 @@ describe("ReleaseInfoCanaryComment", () => {
 
     // Verify the error was logged appropriately
     expect(auto.logger.verbose.info).toHaveBeenCalledWith(
-      "Could not post comment - likely not in a PR context",
+      "Error posting comment to PR:",
     );
+    expect(auto.logger.verbose.info).toHaveBeenCalledWith("No PR found");
 
     // Verify no other errors were logged that would indicate build failure
     expect(auto.logger.verbose.info).not.toHaveBeenCalledWith(
