@@ -98,7 +98,7 @@ export default class ReleaseInfo implements IPlugin {
       // Check if we're in a PR context by checking if the comment function is available
       if (!auto.comment) {
         auto.logger.verbose.info(
-          "An instance of auto shipit was triggered outside of a PR context, skipping comment",
+          "Auto shipit was triggered outside of a PR context, skipping comment",
         );
         return;
       }
