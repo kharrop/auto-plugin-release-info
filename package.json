@@ -1,6 +1,6 @@
 {
   "name": "auto-plugin-release-info",
-  "version": "0.6.11",
+  "version": "0.6.12",
   "description": "Auto plugin that outputs info about the latest release",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
