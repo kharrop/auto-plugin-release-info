@@ -2,6 +2,20 @@
 
 #### ⚠️ Pushed to `main`
 
+- fixing log message ([@kharrop](https://github.com/kharrop))
+- logic ([@kharrop](https://github.com/kharrop))
+- actually fixing log issue ([@kharrop](https://github.com/kharrop))
+
+#### Authors: 1
+
+- Kelly Harrop ([@kharrop](https://github.com/kharrop))
+
+---
+
+# v0.6.11 (Wed Jul 23 2025)
+
+#### ⚠️ Pushed to `main`
+
 - logic ([@kharrop](https://github.com/kharrop))
 - actually fixing log issue ([@kharrop](https://github.com/kharrop))
 
