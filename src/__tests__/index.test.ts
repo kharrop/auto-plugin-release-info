@@ -2,6 +2,17 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import ReleaseInfo from "../";
 import Auto from "@auto-it/core";
 
+// Mock getPrNumberFromEnv
+vi.mock("@auto-it/core", async () => {
+  const actual = await vi.importActual("@auto-it/core");
+  return {
+    ...actual,
+    getPrNumberFromEnv: vi.fn(),
+  };
+});
+
+import { getPrNumberFromEnv } from "@auto-it/core";
+
 describe("ReleaseInfoCanaryComment", () => {
   let auto: Auto;
   let plugin: ReleaseInfo;
@@ -22,6 +33,9 @@ describe("ReleaseInfoCanaryComment", () => {
       log: vi.fn(),
     } as any;
     auto.comment = vi.fn().mockResolvedValue(undefined);
+
+    // Mock getPrNumberFromEnv to return a PR number by default
+    (getPrNumberFromEnv as any).mockReturnValue("123");
 
     plugin = new ReleaseInfo();
     plugin.apply(auto);
@@ -72,6 +86,9 @@ describe("ReleaseInfoCanaryComment", () => {
   });
 
   it("should handle errors when posting comments", async () => {
+    // Ensure getPrNumberFromEnv returns a PR number for this test
+    (getPrNumberFromEnv as any).mockReturnValue("123");
+
     // Create an error to be thrown
     const testError = new Error("Comment failed");
 
@@ -92,6 +109,9 @@ describe("ReleaseInfoCanaryComment", () => {
   });
 
   it("should skip comment posting when not in a PR context", async () => {
+    // Mock getPrNumberFromEnv to return undefined for this test
+    (getPrNumberFromEnv as any).mockReturnValue(undefined);
+
     // Create a new Auto instance with a comment property that's set to null
     const autoWithoutComment = {
       hooks: {
@@ -105,7 +125,7 @@ describe("ReleaseInfoCanaryComment", () => {
         },
         log: vi.fn(),
       },
-      // comment is intentionally not defined here
+      comment: vi.fn().mockResolvedValue(undefined),
     } as any;
 
     // Apply the plugin to this new instance
@@ -189,9 +209,8 @@ describe("ReleaseInfoCanaryComment", () => {
   });
 
   it("should not fail the build when there is no PR context", async () => {
-    // Mock the comment method to throw an error to simulate no PR context
-    const noPrError = new Error("No PR found");
-    auto.comment = vi.fn().mockRejectedValue(noPrError);
+    // Mock getPrNumberFromEnv to return undefined for this test
+    (getPrNumberFromEnv as any).mockReturnValue(undefined);
 
     // Get the callback that was registered with the afterShipIt hook
     const tapCallback = (auto.hooks.afterShipIt.tap as any).mock.calls[0][1];
@@ -205,16 +224,59 @@ describe("ReleaseInfoCanaryComment", () => {
     // Verify the build didn't fail (function completed without throwing)
     expect(result).toBeUndefined();
 
-    // Verify the error was logged appropriately
+    // Verify the appropriate messages were logged
     expect(auto.logger.verbose.info).toHaveBeenCalledWith(
-      "Error posting comment to PR:",
+      "Processing latest release with version 1.0.0",
     );
-    expect(auto.logger.verbose.info).toHaveBeenCalledWith("No PR found");
+    expect(auto.logger.verbose.info).toHaveBeenCalledWith(
+      "Auto shipit was triggered outside of a PR context, skipping comment",
+    );
 
     // Verify no other errors were logged that would indicate build failure
     expect(auto.logger.verbose.info).not.toHaveBeenCalledWith(
       expect.stringMatching(/^Failed/),
       expect.any(Error),
+    );
+  });
+
+  it("should post a comment when PR number is detected", async () => {
+    // Ensure getPrNumberFromEnv returns a PR number for this test
+    (getPrNumberFromEnv as any).mockReturnValue("123");
+
+    // Create a new Auto instance
+    const autoWithPr = {
+      hooks: {
+        afterShipIt: {
+          tap: vi.fn(),
+        },
+      },
+      logger: {
+        verbose: {
+          info: vi.fn(),
+        },
+        log: vi.fn(),
+      },
+      comment: vi.fn().mockResolvedValue(undefined),
+    } as any;
+
+    // Apply the plugin to this new instance
+    const testPlugin = new ReleaseInfo();
+    testPlugin.apply(autoWithPr);
+
+    // Get the callback that was registered with the afterShipIt hook
+    const tapCallback = (autoWithPr.hooks.afterShipIt.tap as any).mock
+      .calls[0][1];
+
+    // Call the callback with a release object
+    await tapCallback({ newVersion: "1.0.0", context: "latest" });
+
+    // Verify the comment was posted
+    expect(autoWithPr.comment).toHaveBeenCalledWith({
+      message: expect.stringContaining("1.0.0"),
+      context: "Release Info",
+    });
+    expect(autoWithPr.logger.verbose.info).toHaveBeenCalledWith(
+      "Successfully posted version comment",
     );
   });
 });

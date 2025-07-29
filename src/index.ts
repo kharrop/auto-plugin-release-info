@@ -1,4 +1,4 @@
-import { Auto, IPlugin } from "@auto-it/core";
+import { Auto, IPlugin, getPrNumberFromEnv } from "@auto-it/core";
 
 /**
  * Auto plugin that posts a PR comment with version information when a release is created
@@ -95,8 +95,9 @@ export default class ReleaseInfo implements IPlugin {
       // Get the appropriate message for this release context
       const message = this.getVersionMessage(newVersion, releaseContext);
 
-      // Check if we're in a PR context by checking if the comment function is available
-      if (!auto.comment) {
+      // Check if we're in a PR context before attempting to comment
+      const prNumber = getPrNumberFromEnv();
+      if (!prNumber) {
         auto.logger.verbose.info(
           "Auto shipit was triggered outside of a PR context, skipping comment",
         );
